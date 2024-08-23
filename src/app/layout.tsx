@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -8,7 +9,11 @@ export const metadata = {
   description: "Web UI for Senseii App",
 };
 
-export default function RootLayout({ children }) {
+interface Children {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: Readonly<Children>) {
   return (
     <html lang="en">
       <body
