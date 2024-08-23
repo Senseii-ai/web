@@ -13,7 +13,7 @@ const Home = () => {
   return (
     <div className="flex w-full h-full">
       <SideBar sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
-      <div className="w-full">
+      <div className="w-full flex">
         <ChatUI sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
       </div>
     </div>
