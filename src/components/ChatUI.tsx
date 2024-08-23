@@ -1,7 +1,12 @@
 import ChatInput from "./ChatInput";
 import ToggleSidebarIcon from "./ToggleSideBar";
 
-const ChatUI = ({ sideBarOpen, toggleSidebar }) => {
+interface IChatUIProps {
+  sideBarOpen: boolean;
+  toggleSidebar: () => void;
+}
+
+const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
   return (
     <div className="w-full ">
       <div className={`${sideBarOpen ? "hidden" : "block"}`}>
