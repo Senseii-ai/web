@@ -8,12 +8,13 @@ interface IChatUIProps {
 
 const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
   return (
-    <div className="w-full ">
+    <div
+      className={`${sideBarOpen ? "justify-end" : "justify-between"} flex flex-col w-full h-full`}
+    >
       <div className={`${sideBarOpen ? "hidden" : "block"}`}>
         <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
       </div>
-      <div className="flex justify-between h-full flex-col items-center w-full">
-        <div>I am Chat UI</div>
+      <div className="flex self-end flex-col items-center w-full">
         <ChatInput />
       </div>
     </div>

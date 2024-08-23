@@ -13,7 +13,7 @@ const Home: React.FC = () => {
   return (
     <div className="flex w-full h-full">
       <SideBar sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
-      <div className="w-full flex">
+      <div className="w-full">
         <ChatUI sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
       </div>
     </div>
