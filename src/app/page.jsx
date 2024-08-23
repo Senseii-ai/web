@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import SideBar from "@/components/Sidebar";
-import ToggleSidebarIcon from "@/components/ToggleSideBar";
+import ChatUI from "@/components/ChatUI";
 
 const Home = () => {
   const [sideBarOpen, toggleSidebar] = useState(true);
@@ -11,12 +11,10 @@ const Home = () => {
     toggleSidebar(!sideBarOpen);
   };
   return (
-    <div className="flex h-full">
+    <div className="flex w-full h-full">
       <SideBar sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
-      <div>
-        <div className={`${sideBarOpen ? "hidden" : "block"}`}>
-          <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
-        </div>
+      <div className="w-full">
+        <ChatUI sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
       </div>
     </div>
   );
