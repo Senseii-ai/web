@@ -1,9 +1,12 @@
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import axios from "axios";
 
-const inter = Inter({ subsets: ["latin"] });
+import AuthProvider from "@/hooks/auth";
+const roboto = Roboto({
+  weight: ["100", "300", "400", "500"],
+  subsets: ["latin"],
+});
 
 export const metadata = {
   title: "Senseii Web",
@@ -18,9 +21,9 @@ export default async function RootLayout({ children }: Readonly<Children>) {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} bg-gray-900 h-screen w-screen text-white`}
+        className={`${roboto.className} bg-[#cecde1] h-screen w-screen text-white`}
       >
-        {children}
+        <AuthProvider> {children}</AuthProvider>
       </body>
     </html>
   );

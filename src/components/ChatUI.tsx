@@ -2,6 +2,7 @@ import ChatInput from "./ChatInput";
 import ToggleSidebarIcon from "./ToggleSideBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "@/hooks/auth";
 
 interface IChatUIProps {
   sideBarOpen: boolean;
@@ -10,6 +11,7 @@ interface IChatUIProps {
 
 const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
   const [response, setResponse] = useState("");
+  const { logout } = useAuth();
 
   useEffect(() => {
     const serverResponse = async () => {
@@ -22,6 +24,10 @@ const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
     serverResponse();
   }, []);
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <div
       className={`${sideBarOpen ? "justify-end" : "justify-between"} flex flex-col w-full h-full`}
@@ -32,6 +38,7 @@ const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
 
       {response}
       <div className="flex self-end flex-col items-center w-full">
+        <button onClick={handleLogout}>Logout</button>
         <ChatInput />
       </div>
     </div>
