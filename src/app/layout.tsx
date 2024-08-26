@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import axios from "axios";
 
+import AuthProvider from "@/hooks/auth";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: Readonly<Children>) {
       <body
         className={`${inter.className} bg-gray-900 h-screen w-screen text-white`}
       >
-        {children}
+        <AuthProvider> {children}</AuthProvider>
       </body>
     </html>
   );
