@@ -1,6 +1,12 @@
 "use client";
 
-import { useContext, createContext, ReactNode, useState } from "react";
+import {
+  useContext,
+  createContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
 
 interface ILoginData {
   username: string;
@@ -10,8 +16,7 @@ interface ILoginData {
 export interface ILoginContext {
   token: string | null;
   user: string | null;
-  // login: (data: ILoginData) => Promise<void>;
-  login: () => Promise<void>;
+  login: (data: ILoginData) => Promise<void>;
   logout: () => void;
 }
 
@@ -20,9 +25,15 @@ const AuthContext = createContext<ILoginContext | null>(null);
 // Provider to provide authentication context to its child.
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState("");
-  const [token, setToken] = useState(localStorage.getItem("site") || "");
+  // const [token, setToken] = useState(window.localStorage.getItem("site") || "");
+  const [token, setToken] = useState<string | null>("");
 
-  const login = async () => {
+  useEffect(() => {
+    const browserToken = localStorage.getItem("site");
+    setToken(browserToken);
+  }, []);
+
+  const login = async ({ username, password }: ILoginData) => {
     try {
       // const response = await fetch("http://localhost:9090/auth/login", {
       //   method: "POST",
@@ -38,20 +49,22 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       //   setToken(res.token);
       //   localStorage.setItem("site", res.token);
       // }
+      console.log("Got the data here", username, password);
       const tempToken = "akjjhgjhg2jhgjhg2jhg2jhg2j";
       const tempName = "Prateek";
       setUser(tempName);
       setToken(tempToken);
-      localStorage.setItem("site", tempToken);
+      localStorage.setItem("checkThis", tempToken);
     } catch (err) {
       console.error(err);
+      throw err;
     }
   };
 
   const logout = () => {
     setUser("");
-    setToken("");
-    localStorage.removeItem("site");
+    setToken(null);
+    localStorage.removeItem("checkThis");
   };
 
   return (
