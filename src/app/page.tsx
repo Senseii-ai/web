@@ -8,7 +8,7 @@ const Home: React.FC = () => {
   const [sideBarOpen, toggleSidebar] = useState(true);
 
   const handleSidebarToggle = () => {
-    toggleSidebar(!sideBarOpen);
+    toggleSidebar((sideBarOpen) => !sideBarOpen);
   };
   return (
     <div className="flex w-full h-full">
