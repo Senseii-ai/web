@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
+import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,7 +14,7 @@ interface Children {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: Readonly<Children>) {
+export default async function RootLayout({ children }: Readonly<Children>) {
   return (
     <html lang="en">
       <body
