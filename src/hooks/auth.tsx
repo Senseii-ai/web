@@ -9,14 +9,14 @@ import {
 } from "react";
 
 interface ILoginData {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface ILoginContext {
   token: string | null;
   user: string | null;
-  login: (data: ILoginData) => Promise<void>;
+  login: (data: ILoginData) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -33,31 +33,34 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(browserToken);
   }, []);
 
-  const login = async ({ username, password }: ILoginData) => {
+  const login = async ({ email, password }: ILoginData) => {
     try {
-      // const response = await fetch("http://localhost:9090/auth/login", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(data),
-      // });
-      //
-      // const res = await response.json();
-      // if (res.data) {
-      //   setUser(res.data.user);
-      //   setToken(res.token);
-      //   localStorage.setItem("site", res.token);
-      // }
-      console.log("Got the data here", username, password);
-      const tempToken = "akjjhgjhg2jhgjhg2jhg2jhg2j";
-      const tempName = "Prateek";
-      setUser(tempName);
-      setToken(tempToken);
-      localStorage.setItem("checkThis", tempToken);
+      const response = await fetch("http://localhost:9090/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (response.status == 400) {
+        throw new Error("user does not exist");
+      }
+
+      const res = await response.json();
+      if (res.data) {
+        setUser(res.data.user);
+        setToken(res.token);
+        localStorage.setItem("site", res.token);
+      }
+      // localStorage.setItem("token", );
+      return true;
     } catch (err) {
       console.error(err);
-      throw err;
+      return false;
     }
   };
 

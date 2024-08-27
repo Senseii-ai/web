@@ -12,20 +12,29 @@ const bebas = Bebas_Neue({
 
 const LoginForm = () => {
   const { login } = useAuth();
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handlePasswordInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+  };
+
+  const handleFormSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login({ username: userName, password: password });
+    const success = await login({ email: email, password: password });
+    console.log("This is the response", success);
+    if (!success) {
+      resetForm();
+    }
   };
 
   return (
@@ -39,21 +48,19 @@ const LoginForm = () => {
           className="flex flex-col mb-20 gap-y-5"
         >
           <div className="flex flex-col gap-y-2">
-            <label className="text-base font-medium text-white">
-              User Name
-            </label>
+            <label className="text-base font-medium text-white">Email</label>
             <input
               className="rounded-lg p-3 text-base"
-              type="text"
-              placeholder="Enter username here"
-              value={userName}
+              type="email"
+              placeholder="Enter email here"
+              value={email}
               onChange={handleUserNameChange}
             />
           </div>
           <div className="flex flex-col gap-y-2">
             <label className="text-base font-medium text-white">Password</label>
             <input
-              className="rounded-lg p-3 text-sm"
+              className="rounded-lg p-3 text-base"
               type="password"
               placeholder="Enter password here"
               value={password}
