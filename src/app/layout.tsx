@@ -21,7 +21,7 @@ export default async function RootLayout({ children }: Readonly<Children>) {
   return (
     <html lang="en">
       <body
-        className={`${roboto.className} bg-[#cecde1] h-screen w-screen text-white`}
+        className={`flex justify-center items-center ${roboto.className} bg-[#ffffff] bg-[#cecde1] h-screen w-screen text-white`}
       >
         <AuthProvider> {children}</AuthProvider>
       </body>
