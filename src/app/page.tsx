@@ -11,10 +11,6 @@ import { redirect } from "next/navigation";
 const Home: React.FC = () => {
   const [sideBarOpen, toggleSidebar] = useState(true);
   const { token }: ILoginContext = useAuth();
-  if (token === null) {
-    redirect("/login");
-  }
-
   const handleSidebarToggle = () => {
     toggleSidebar((sideBarOpen) => !sideBarOpen);
   };

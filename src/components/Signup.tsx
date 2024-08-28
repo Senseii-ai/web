@@ -3,7 +3,7 @@
 import { ChangeEvent, useState } from "react";
 import { Poppins } from "next/font/google";
 import { useAuth } from "@/hooks/auth";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const poppins = Poppins({
   weight: ["100", "400", "600"],
@@ -13,7 +13,8 @@ const poppins = Poppins({
 
 const SignupForm = () => {
   const router = useRouter();
-  const { signup } = useAuth();
+  const path = usePathname();
+  const { signup, login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEqual, setIsEqual] = useState(false);
@@ -37,8 +38,12 @@ const SignupForm = () => {
   const handleFormSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const success = await signup({ email: email, password: password });
-    console.log("This is the response", success);
+    let success: boolean;
+    if (path === "/login") {
+      success = await login({ email, password });
+    } else {
+      success = await signup({ email: email, password: password });
+    }
     if (!success) {
       router.push("/");
     }
@@ -86,20 +91,21 @@ const SignupForm = () => {
               onChange={handlePasswordInputChange}
             />
           </div>
-
-          <div className="flex w-full flex-col gap-y-2">
-            <label className="text-lg font-semibold">Confirm Password*</label>
-            <input
-              className={`${isEqual ? "outline-[#087443]" : "outline-[#8b969e]"} p-3 rounded-xl border-2 `}
-              type="password"
-              placeholder="Enter email here"
-              value={confirmPassword}
-              onChange={handlePasswordConfirmChange}
-            />
-          </div>
+          {path === "/signup" && (
+            <div className="flex w-full flex-col gap-y-2">
+              <label className="text-lg font-semibold">Confirm Password*</label>
+              <input
+                className={`${isEqual ? "outline-[#087443]" : "outline-[#8b969e]"} p-3 rounded-xl border-2 `}
+                type="password"
+                placeholder="Enter email here"
+                value={confirmPassword}
+                onChange={handlePasswordConfirmChange}
+              />
+            </div>
+          )}
 
           <button className="text-white text-xl w-full p-4 rounded-xl bg-[#087443]">
-            Signup
+            {path === "/login" ? "Login" : "Signup"}
           </button>
         </form>
       </div>

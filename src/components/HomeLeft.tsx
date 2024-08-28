@@ -1,3 +1,5 @@
+"use client";
+
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { FiUser } from "react-icons/fi";
@@ -5,6 +7,7 @@ import { FaRegNoteSticky } from "react-icons/fa6";
 import { IoRocketOutline } from "react-icons/io5";
 import { ReactNode } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 const poppins = Poppins({
   weight: ["100", "400", "600"],
@@ -13,6 +16,7 @@ const poppins = Poppins({
 });
 
 const HomeLeft = () => {
+  const path = usePathname();
   return (
     <div className="flex flex-col justify-between h-full text-black p-5">
       <div className="">
@@ -41,9 +45,10 @@ const HomeLeft = () => {
         </div>
       </div>
       <div>
-        <Link href={"/login"}>
+        <Link href={path === "/login" ? "/signup" : "/login"}>
           <div className="flex border-2 border-[#087443] w-fit px-5 rounded-lg py-2 items-center gap-x-2 ">
-            Login <FaLongArrowAltRight className="text-xl" />
+            {path === "/login" ? "Signup" : "Login"}
+            <FaLongArrowAltRight className="text-xl" />
           </div>
         </Link>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   useContext,
   createContext,
@@ -30,13 +31,28 @@ const AuthContext = createContext<ILoginContext | null>(null);
 
 // Provider to provide authentication context to its child.
 const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const [user, setUser] = useState("");
   // const [token, setToken] = useState(window.localStorage.getItem("site") || "");
   const [token, setToken] = useState<string | null>("");
 
   useEffect(() => {
+    if (token) {
+      router.push("/");
+    } else {
+      router.push("/login");
+    }
+  }, [token]);
+
+  useEffect(() => {
     const browserToken = localStorage.getItem("site");
     setToken(browserToken);
+
+    if (browserToken) {
+      router.push("/");
+    } else {
+      router.push("/login");
+    }
   }, []);
 
   const login = async ({ email, password }: ILoginData) => {
@@ -57,12 +73,12 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const res = await response.json();
-      if (res.data) {
-        setUser(res.data.user);
-        setToken(res.token);
-        localStorage.setItem("site", res.token);
+      console.log("res data", res);
+      if (res) {
+        setUser(res.user);
+        setToken(res.accessToken);
+        localStorage.setItem("site", res.accessToken);
       }
-      // localStorage.setItem("token", );
       return true;
     } catch (err) {
       console.error(err);
@@ -84,11 +100,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         }),
       });
 
-      console.log("This is response", response);
-
-      if (response.status !== 200) {
-        throw new Error("Error signing in");
-      }
+      router.push("/login");
 
       return true;
     } catch (err) {
@@ -100,7 +112,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser("");
     setToken(null);
-    localStorage.removeItem("checkThis");
+    localStorage.removeItem("site");
   };
 
   return (
