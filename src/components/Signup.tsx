@@ -2,6 +2,8 @@
 
 import { ChangeEvent, useState } from "react";
 import { Poppins } from "next/font/google";
+import { useAuth } from "@/hooks/auth";
+import { useRouter } from "next/navigation";
 
 const poppins = Poppins({
   weight: ["100", "400", "600"],
@@ -10,8 +12,12 @@ const poppins = Poppins({
 });
 
 const SignupForm = () => {
+  const router = useRouter();
+  const { signup } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isEqual, setIsEqual] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -21,24 +27,27 @@ const SignupForm = () => {
     setPassword(e.target.value);
   };
 
-  const resetForm = () => {
-    setEmail("");
-    setPassword("");
+  const handlePasswordConfirmChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(() => e.target.value);
+    if (confirmPassword !== "") {
+      setIsEqual(password === e.target.value);
+    }
   };
 
   const handleFormSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const success = await login({ email: email, password: password });
-    // console.log("This is the response", success);
-    // if (!success) {
-    //   resetForm();
-    // }
+
+    const success = await signup({ email: email, password: password });
+    console.log("This is the response", success);
+    if (!success) {
+      router.push("/");
+    }
   };
 
   return (
-    <div className="h-full max-w-[40rem] lg:px-20 px-2 container mx-auto text-black">
+    <div className="h-full backdrop-blur-lg max-w-[40rem]  lg:px-20 px-2 container mx-auto text-black">
       <div className="h-full flex flex-col gap-y-5 justify-center items-center">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center ">
           <h1
             className={`${poppins.className} lg:hidden text-4xl font-semibold text-black mb-20 text-center`}
           >
@@ -59,7 +68,7 @@ const SignupForm = () => {
           <div className="flex w-full flex-col gap-y-2">
             <label className="text-lg font-semibold">Email*</label>
             <input
-              className="p-3 rounded-xl border border-[#8b969e]"
+              className="p-3 rounded-xl border-2 outline-[#8b969e]"
               type="email"
               placeholder="Enter email here"
               value={email}
@@ -70,11 +79,22 @@ const SignupForm = () => {
           <div className="flex w-full flex-col gap-y-2">
             <label className="text-lg font-semibold">Password*</label>
             <input
-              className="p-3 rounded-xl border border-[#8b969e]"
-              type="email"
+              className="p-3 rounded-xl border-2 outline-[#8b969e]"
+              type="password"
               placeholder="Enter email here"
               value={password}
               onChange={handlePasswordInputChange}
+            />
+          </div>
+
+          <div className="flex w-full flex-col gap-y-2">
+            <label className="text-lg font-semibold">Confirm Password*</label>
+            <input
+              className={`${isEqual ? "outline-[#087443]" : "outline-[#8b969e]"} p-3 rounded-xl border-2 `}
+              type="password"
+              placeholder="Enter email here"
+              value={confirmPassword}
+              onChange={handlePasswordConfirmChange}
             />
           </div>
 

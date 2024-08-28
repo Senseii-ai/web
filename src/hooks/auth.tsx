@@ -22,6 +22,7 @@ export interface ILoginContext {
   token: string | null;
   user: string | null;
   login: (data: ILoginData) => Promise<boolean>;
+  signup: (data: ISignupData) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -68,30 +69,34 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
   };
-  //
-  // const signin = async ({ email, password }: ISignupData) => {
-  //   try {
-  //     const response = await fetch("http://localhost:9090/api/signup", {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         email: email,
-  //         password: password,
-  //       }),
-  //     });
-  //
-  //     if (response.status !== 200) {
-  //       throw new Error("Error signing in");
-  //     }
-  //
-  //     return true;
-  //   } catch (err) {
-  //     console.error(err);
-  //     return false;
-  //   }
-  // };
-  //
+
+  const signup = async ({ email, password }: ISignupData) => {
+    try {
+      console.log("I was here");
+      const response = await fetch("http://localhost:9090/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      console.log("This is response", response);
+
+      if (response.status !== 200) {
+        throw new Error("Error signing in");
+      }
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
+
   const logout = () => {
     setUser("");
     setToken(null);
@@ -99,7 +104,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

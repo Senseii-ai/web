@@ -3,6 +3,7 @@ import "./globals.css";
 import React from "react";
 
 import AuthProvider from "@/hooks/auth";
+import healthCheck from "@/actions/api/connection.health";
 const roboto = Roboto({
   weight: ["100", "300", "400", "500"],
   subsets: ["latin"],
@@ -18,6 +19,8 @@ interface Children {
 }
 
 export default async function RootLayout({ children }: Readonly<Children>) {
+  healthCheck();
+
   return (
     <html lang="en">
       <body
