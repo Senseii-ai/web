@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   useContext,
   createContext,
@@ -9,14 +10,20 @@ import {
 } from "react";
 
 interface ILoginData {
-  username: string;
+  email: string;
+  password: string;
+}
+
+interface ISignupData {
+  email: string;
   password: string;
 }
 
 export interface ILoginContext {
   token: string | null;
   user: string | null;
-  login: (data: ILoginData) => Promise<void>;
+  login: (data: ILoginData) => Promise<boolean>;
+  signup: (data: ISignupData) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -24,51 +31,92 @@ const AuthContext = createContext<ILoginContext | null>(null);
 
 // Provider to provide authentication context to its child.
 const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const [user, setUser] = useState("");
   // const [token, setToken] = useState(window.localStorage.getItem("site") || "");
   const [token, setToken] = useState<string | null>("");
 
   useEffect(() => {
+    if (token) {
+      router.push("/");
+    } else {
+      router.push("/login");
+    }
+  }, [token]);
+
+  useEffect(() => {
     const browserToken = localStorage.getItem("site");
     setToken(browserToken);
+
+    if (browserToken) {
+      router.push("/");
+    } else {
+      router.push("/login");
+    }
   }, []);
 
-  const login = async ({ username, password }: ILoginData) => {
+  const login = async ({ email, password }: ILoginData) => {
     try {
-      // const response = await fetch("http://localhost:9090/auth/login", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(data),
-      // });
-      //
-      // const res = await response.json();
-      // if (res.data) {
-      //   setUser(res.data.user);
-      //   setToken(res.token);
-      //   localStorage.setItem("site", res.token);
-      // }
-      console.log("Got the data here", username, password);
-      const tempToken = "akjjhgjhg2jhgjhg2jhg2jhg2j";
-      const tempName = "Prateek";
-      setUser(tempName);
-      setToken(tempToken);
-      localStorage.setItem("checkThis", tempToken);
+      const response = await fetch("http://localhost:9090/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (response.status == 400) {
+        throw new Error("user does not exist");
+      }
+
+      const res = await response.json();
+      console.log("res data", res);
+      if (res) {
+        setUser(res.user);
+        setToken(res.accessToken);
+        localStorage.setItem("site", res.accessToken);
+      }
+      return true;
     } catch (err) {
       console.error(err);
-      throw err;
+      return false;
+    }
+  };
+
+  const signup = async ({ email, password }: ISignupData) => {
+    try {
+      console.log("I was here");
+      const response = await fetch("http://localhost:9090/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      router.push("/login");
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
     }
   };
 
   const logout = () => {
     setUser("");
     setToken(null);
-    localStorage.removeItem("checkThis");
+    localStorage.removeItem("site");
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

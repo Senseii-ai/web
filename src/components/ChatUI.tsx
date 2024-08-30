@@ -36,7 +36,6 @@ const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
         <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
       </div>
 
-      {response}
       <div className="flex self-end flex-col items-center w-full">
         <button onClick={handleLogout}>Logout</button>
         <ChatInput />
