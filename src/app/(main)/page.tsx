@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "@/components/Sidebar";
 import ChatUI, { IChatMessage } from "@/components/ChatUI";
+import { useAuth } from "@/hooks/auth";
 
 const Home: React.FC = () => {
   const [sideBarOpen, toggleSidebar] = useState(true);

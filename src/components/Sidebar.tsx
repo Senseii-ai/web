@@ -1,4 +1,4 @@
-import axios from "axios";
+import { useAuth } from "@/hooks/auth";
 import ToggleSidebarIcon from "./ToggleSideBar";
 import React, { useEffect, useState } from "react";
 
@@ -16,18 +16,26 @@ const SideBar: React.FC<ISidebarProps> = ({
   toggleSidebar,
 }: ISidebarProps) => {
   const [threadList, setThreadList] = useState<IThreadList[]>([]);
-  useEffect(() => {
-    const getThreads = async () => {
-      const { data } = await axios.get(
-        "http://localhost:9090/api/health/threads",
-      );
-      const threads = data.message;
-      console.log("This is fetched threads", threads);
+  const { token } = useAuth();
 
-      setThreadList(threads);
-    };
-    getThreads();
-  }, []);
+  const getThreads = async () => {
+    const bearer = "Bearer " + token;
+
+    const response = await fetch("http://localhost:9090/api/threads/", {
+      headers: {
+        Authorization: bearer,
+      },
+    });
+    const data = await response.json();
+    setThreadList(data);
+    console.log("this is the data", data);
+  };
+
+  useEffect(() => {
+    if (token) {
+      getThreads();
+    }
+  }, [token]);
 
   return (
     <div
