@@ -43,7 +43,7 @@ const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
 
   return (
     <div
-      className={`${sideBarOpen ? "justify-end" : "justify-between"} flex flex-col w-full max-h-full`}
+      className={`${sideBarOpen ? "justify-end" : "justify-end"} flex flex-col w-full h-full`}
     >
       <div className={`${sideBarOpen ? "hidden" : "block"} absolute top-0 `}>
         <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
