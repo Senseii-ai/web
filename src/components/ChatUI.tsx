@@ -2,13 +2,15 @@ import ChatInput from "./ChatInput";
 import ToggleSidebarIcon from "./ToggleSideBar";
 import { FaInstalod } from "react-icons/fa6";
 import { redirect, RedirectType, usePathname } from "next/navigation";
-import { useAuth } from "@/hooks/auth";
 import { Message } from "openai/src/resources/beta/threads/messages.js";
+import { useEffect, useState } from "react";
+import { getThreadMessages } from "@/actions/api/threads";
+import { useAuth } from "@/hooks/auth";
 
 interface IChatUIProps {
   sideBarOpen: boolean;
   toggleSidebar: () => void;
-  messages: Message[];
+  threadId: string;
 }
 
 export interface IChatMessage {
@@ -16,25 +18,23 @@ export interface IChatMessage {
   message: string;
 }
 
-const ChatUI = ({ sideBarOpen, toggleSidebar, messages }: IChatUIProps) => {
-  const path = usePathname();
-  // const { logout } = useAuth();
+const ChatUI = ({ sideBarOpen, toggleSidebar, threadId }: IChatUIProps) => {
+  const { token } = useAuth();
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  const threadId = path;
+  useEffect(() => {
+    // const threadId = "thread_A0BouZ0cNpcJHVBp7xccwuju";
+    const getMessages = async () => {
+      const messages = await getThreadMessages(token, threadId);
+      if (messages === null) {
+        setMessages([]);
+        return;
+      }
+      setMessages(messages);
+    };
+    getMessages();
+  }, []);
 
-  const handleChatSubmit = async () => {
-    if (threadId === "/") {
-      const newThreadId = "hello";
-      redirect(`/?threadid=${newThreadId}`, RedirectType.push);
-    } else {
-      redirect(`/${threadId}`);
-    }
-  };
-
-  // const handleLogout = () => {
-  //   logout();
-  // };
-  //
   return (
     <div
       className={`${sideBarOpen ? "justify-end" : "justify-end"} flex flex-col w-full h-full`}
@@ -46,16 +46,15 @@ const ChatUI = ({ sideBarOpen, toggleSidebar, messages }: IChatUIProps) => {
         <div
           className={`${sideBarOpen ? "w-11/12" : "w-2/3"} flex flex-col-reverse gap-y-5 py-2`}
         >
-          {messages?.map((item, index) => {
-            return <ChatBlob key={index} content={item} />;
-          })}
+          {messages && messages.length > 0
+            ? messages.map((item, index) => {
+                return <ChatBlob key={index} content={item} />;
+              })
+            : ""}
         </div>
       </div>
       <div className="flex self-end flex-col items-center w-full pb-5">
-        <ChatInput
-          sideBarOpen={sideBarOpen}
-          handleChatSubmit={handleChatSubmit}
-        />
+        <ChatInput sideBarOpen={sideBarOpen} threadId={threadId} />
       </div>
     </div>
   );
