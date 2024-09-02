@@ -13,7 +13,11 @@ const Chat = ({ params }: { params: { slug: string } }) => {
     <div className="flex w-full h-full">
       <SideBar sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
       <div className="w-full">
-        <ChatUI sideBarOpen={sideBarOpen} toggleSidebar={handleSidebarToggle} />
+        <ChatUI
+          sideBarOpen={sideBarOpen}
+          toggleSidebar={handleSidebarToggle}
+          threadId={params.slug}
+        />
       </div>
     </div>
   );

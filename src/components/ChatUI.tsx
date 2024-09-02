@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/auth";
 interface IChatUIProps {
   sideBarOpen: boolean;
   toggleSidebar: () => void;
+  threadId: string;
 }
 
 export interface IChatMessage {
@@ -17,22 +18,12 @@ export interface IChatMessage {
   message: string;
 }
 
-const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
-  const threadId = usePathname();
+const ChatUI = ({ sideBarOpen, toggleSidebar, threadId }: IChatUIProps) => {
   const { token } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleChatSubmit = async () => {
-    if (threadId === "/") {
-      const newThreadId = "hello";
-      redirect(`/?threadid=${newThreadId}`, RedirectType.push);
-    } else {
-      redirect(`/${threadId}`);
-    }
-  };
-
   useEffect(() => {
-    const threadId = "thread_A0BouZ0cNpcJHVBp7xccwuju";
+    // const threadId = "thread_A0BouZ0cNpcJHVBp7xccwuju";
     const getMessages = async () => {
       const messages = await getThreadMessages(token, threadId);
       if (messages === null) {
@@ -63,10 +54,7 @@ const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
         </div>
       </div>
       <div className="flex self-end flex-col items-center w-full pb-5">
-        <ChatInput
-          sideBarOpen={sideBarOpen}
-          handleChatSubmit={handleChatSubmit}
-        />
+        <ChatInput sideBarOpen={sideBarOpen} threadId={threadId} />
       </div>
     </div>
   );

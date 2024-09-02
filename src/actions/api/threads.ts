@@ -7,7 +7,6 @@ export const getThreads = async (token: string) => {
   try {
     const url = `${BaseUrl}threads/`;
     const data: IThreadList[] | null = await httpGet(url, token);
-    console.log("These are the the threads", data);
     return data;
   } catch (error) {
     console.error(error);
@@ -15,13 +14,20 @@ export const getThreads = async (token: string) => {
   }
 };
 
-export const startChat = async (token: string) => {
+export const startChat = async (token: string, message: string) => {
   try {
     const url = `${BaseUrl}chat/startChat`;
-    const data = await httpGet(url, token);
+    const userMessage = {
+      message: {
+        role: "user",
+        content: message,
+      },
+    };
+    const data: string | null = await httpPost(url, token, userMessage);
     return data;
   } catch (error) {
     console.error("Error starting thread", error);
+    return null;
   }
 };
 
@@ -49,8 +55,9 @@ const httpPost = async (url: string, token: string, body: any) => {
     method: "POST",
     headers: {
       Authorization: bearer,
+      "Content-Type": "application/json",
     },
-    body: body,
+    body: JSON.stringify(body),
   });
 
   return await data.json();
