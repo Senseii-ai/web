@@ -18,9 +18,8 @@ export interface IChatMessage {
 }
 
 const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
-  const path = usePathname();
+  const threadId = usePathname();
   const { token } = useAuth();
-  const threadId = path;
   const [messages, setMessages] = useState<Message[]>([]);
 
   const handleChatSubmit = async () => {

@@ -1,9 +1,18 @@
+import { IThreadList } from "@/components/Sidebar";
 import { Message } from "openai/src/resources/beta/threads/messages.js";
 
 export const BaseUrl = "http://localhost:9090/api/";
 
-export const getThreads = async (userId: string) => {
-  const data = await fetch("");
+export const getThreads = async (token: string) => {
+  try {
+    const url = `${BaseUrl}threads/`;
+    const data: IThreadList[] | null = await httpGet(url, token);
+    console.log("These are the the threads", data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 export const startChat = async (token: string) => {
@@ -32,6 +41,19 @@ export const getThreadMessages = async (
 
 export const getBearerToken = (token: string) => {
   return "Bearer " + token;
+};
+
+const httpPost = async (url: string, token: string, body: any) => {
+  const bearer = getBearerToken(token);
+  const data = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: bearer,
+    },
+    body: body,
+  });
+
+  return await data.json();
 };
 
 const httpGet = async (url: string, token: string) => {
