@@ -32,27 +32,14 @@ const AuthContext = createContext<ILoginContext | null>(null);
 // Provider to provide authentication context to its child.
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
-  const [user, setUser] = useState("");
-  // const [token, setToken] = useState(window.localStorage.getItem("site") || "");
-  const [token, setToken] = useState<string | null>("");
-
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState<string | null>(null);
   useEffect(() => {
-    if (token) {
-      router.push("/");
-    } else {
+    const localToken = localStorage.getItem("site");
+    if (!localToken) {
       router.push("/login");
     }
-  }, [token]);
-
-  useEffect(() => {
-    const browserToken = localStorage.getItem("site");
-    setToken(browserToken);
-
-    if (browserToken) {
-      router.push("/");
-    } else {
-      router.push("/login");
-    }
+    setToken(localStorage.getItem("site"));
   }, []);
 
   const login = async ({ email, password }: ILoginData) => {
@@ -110,7 +97,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    setUser("");
+    setUser(null);
     setToken(null);
     localStorage.removeItem("site");
   };

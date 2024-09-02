@@ -1,13 +1,14 @@
-import { usePathname } from "next/navigation";
 import ChatInput from "./ChatInput";
 import ToggleSidebarIcon from "./ToggleSideBar";
-import { useAuth } from "@/hooks/auth";
-import { useEffect, useState } from "react";
 import { FaInstalod } from "react-icons/fa6";
+import { redirect, RedirectType, usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/auth";
+import { Message } from "openai/src/resources/beta/threads/messages.js";
 
 interface IChatUIProps {
   sideBarOpen: boolean;
   toggleSidebar: () => void;
+  messages: Message[];
 }
 
 export interface IChatMessage {
@@ -15,32 +16,25 @@ export interface IChatMessage {
   message: string;
 }
 
-const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
+const ChatUI = ({ sideBarOpen, toggleSidebar, messages }: IChatUIProps) => {
   const path = usePathname();
-  console.log("path is", path);
-  const { logout } = useAuth();
-  const [messages, setMessages] = useState<IChatMessage[]>();
+  // const { logout } = useAuth();
 
-  useEffect(() => {
-    const getThreadMessages = async () => {
-      const data = await fetch(
-        "http://localhost:9090/api/threads/getThreadMessages",
-        {
-          method: "GET",
-        },
-      );
-      setMessages(await data.json());
-    };
+  const threadId = path;
 
-    getThreadMessages();
-  }, []);
-
-  console.log("This is messages", messages);
-
-  const handleLogout = () => {
-    logout();
+  const handleChatSubmit = async () => {
+    if (threadId === "/") {
+      const newThreadId = "hello";
+      redirect(`/?threadid=${newThreadId}`, RedirectType.push);
+    } else {
+      redirect(`/${threadId}`);
+    }
   };
 
+  // const handleLogout = () => {
+  //   logout();
+  // };
+  //
   return (
     <div
       className={`${sideBarOpen ? "justify-end" : "justify-end"} flex flex-col w-full h-full`}
@@ -48,9 +42,6 @@ const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
       <div className={`${sideBarOpen ? "hidden" : "block"} absolute top-0 `}>
         <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
       </div>
-      {/* <div className="self-end border-green-500 border-2 p-2 rounded-lg mr-5 mt-2"> */}
-      {/*   <button onClick={handleLogout}>Logout</button> */}
-      {/* </div> */}
       <div className="flex flex-col overflow-auto items-center w-full pt-5">
         <div
           className={`${sideBarOpen ? "w-11/12" : "w-2/3"} flex flex-col-reverse gap-y-5 py-2`}
@@ -61,13 +52,20 @@ const ChatUI = ({ sideBarOpen, toggleSidebar }: IChatUIProps) => {
         </div>
       </div>
       <div className="flex self-end flex-col items-center w-full pb-5">
-        <ChatInput sideBarOpen={sideBarOpen} />
+        <ChatInput
+          sideBarOpen={sideBarOpen}
+          handleChatSubmit={handleChatSubmit}
+        />
       </div>
     </div>
   );
 };
 
-const ChatBlob = ({ content }: { content: IChatMessage }) => {
+const ChatBlob = ({ content }: { content: Message }) => {
+  let message = "";
+  if (content.content[0].type === "text") {
+    message = content.content[0].text.value;
+  }
   return (
     <div className={`${content.role === "user" ? "self-end" : "self-start"}`}>
       <div
@@ -78,7 +76,7 @@ const ChatBlob = ({ content }: { content: IChatMessage }) => {
             <FaInstalod className="text-xl" />
           </div>
         )}
-        {content.message}
+        <div className="text-black"> {message}</div>
       </div>
     </div>
   );

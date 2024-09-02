@@ -18,7 +18,11 @@ interface Children {
   children: React.ReactNode;
 }
 
-export default async function RootLayout({ children }: Readonly<Children>) {
+export default async function RootLayout({
+  children,
+}: {
+  children: Readonly<React.ReactNode>;
+}) {
   healthCheck();
 
   return (

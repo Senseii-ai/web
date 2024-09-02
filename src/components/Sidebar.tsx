@@ -1,6 +1,7 @@
-import axios from "axios";
+import { useAuth } from "@/hooks/auth";
 import ToggleSidebarIcon from "./ToggleSideBar";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface ISidebarProps {
   sideBarOpen: boolean;
@@ -9,25 +10,57 @@ interface ISidebarProps {
 
 interface IThreadList {
   name: string;
+  id: string;
 }
+
+const sampleThreads: IThreadList[] = [
+  {
+    name: "Hello",
+    id: "1",
+  },
+  {
+    name: "Again",
+
+    id: "2",
+  },
+  {
+    name: "Hello",
+
+    id: "3",
+  },
+  {
+    name: "Again",
+
+    id: "4",
+  },
+];
 
 const SideBar: React.FC<ISidebarProps> = ({
   sideBarOpen,
   toggleSidebar,
 }: ISidebarProps) => {
   const [threadList, setThreadList] = useState<IThreadList[]>([]);
-  useEffect(() => {
-    const getThreads = async () => {
-      const { data } = await axios.get(
-        "http://localhost:9090/api/health/threads",
-      );
-      const threads = data.message;
-      console.log("This is fetched threads", threads);
+  const { token } = useAuth();
 
-      setThreadList(threads);
-    };
-    getThreads();
-  }, []);
+  const getThreads = async () => {
+    const bearer = "Bearer " + token;
+
+    const response = await fetch("http://localhost:9090/api/threads/", {
+      headers: {
+        Authorization: bearer,
+      },
+    });
+    // const data = await response.json();
+    setThreadList(sampleThreads);
+    // setThreadList(data);
+    // console.log("this is the data", data);
+  };
+
+  useEffect(() => {
+    if (token) {
+      getThreads();
+    }
+  }, [token]);
 
   return (
     <div
@@ -35,8 +68,15 @@ const SideBar: React.FC<ISidebarProps> = ({
     >
       <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
       <div>
+        <div>
+          <Link href={"/"}>Create new Thread</Link>
+        </div>
         {threadList.map((item, index) => {
-          return <div key={index}>{item.name}</div>;
+          return (
+            <Link key={index} href={`/${item.id}`}>
+              <div>{item.name}</div>
+            </Link>
+          );
         })}
       </div>
     </div>
