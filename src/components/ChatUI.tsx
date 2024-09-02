@@ -23,7 +23,6 @@ const ChatUI = ({ sideBarOpen, toggleSidebar, threadId }: IChatUIProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    // const threadId = "thread_A0BouZ0cNpcJHVBp7xccwuju";
     const getMessages = async () => {
       const messages = await getThreadMessages(token, threadId);
       if (messages === null) {

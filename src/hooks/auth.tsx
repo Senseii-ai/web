@@ -33,13 +33,16 @@ const AuthContext = createContext<ILoginContext | null>(null);
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("site"),
+  );
   useEffect(() => {
     const localToken = localStorage.getItem("site");
     if (!localToken) {
       router.push("/login");
+    } else {
+      setToken(localStorage.getItem("site"));
     }
-    setToken(localStorage.getItem("site"));
   }, []);
 
   const login = async ({ email, password }: ILoginData) => {

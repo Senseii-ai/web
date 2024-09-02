@@ -6,7 +6,7 @@ export const BaseUrl = "http://localhost:9090/api/";
 export const getThreads = async (token: string) => {
   try {
     const url = `${BaseUrl}threads/`;
-    const data: IThreadList[] | null = await httpGet(url, token);
+    const data: IThreadList[] = await httpGet(url, token);
     return data;
   } catch (error) {
     console.error(error);
@@ -36,6 +36,9 @@ export const getThreadMessages = async (
   threadId: string,
 ): Promise<Message[] | null> => {
   try {
+    if (threadId === "") {
+      return null;
+    }
     const url = `${BaseUrl}threads/${threadId}/messages`;
     const data: Message[] = await httpGet(url, token as string);
     return data;
@@ -64,11 +67,19 @@ const httpPost = async (url: string, token: string, body: any) => {
 };
 
 const httpGet = async (url: string, token: string) => {
-  const bearer = getBearerToken(token as string);
-  const data = await fetch(url, {
-    headers: {
-      Authorization: bearer,
-    },
-  });
-  return await data.json();
+  try {
+    const bearer = getBearerToken(token as string);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `${bearer}`,
+      },
+    });
+    if (!response.ok) {
+      console.log("response not good", response.status);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error doing fetch get", error);
+  }
 };
