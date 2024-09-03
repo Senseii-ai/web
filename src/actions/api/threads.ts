@@ -15,6 +15,7 @@ export const getThreads = async (token: string) => {
 };
 
 export const startChat = async (token: string, message: string) => {
+  console.log("I was triggered");
   try {
     const url = `${BaseUrl}chat/startChat`;
     const userMessage = {

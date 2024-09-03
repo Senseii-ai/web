@@ -44,7 +44,7 @@ const SideBar: React.FC<ISidebarProps> = ({
         {threadList?.map((item, index) => {
           return (
             <Link key={index} href={`/${item.id}`}>
-              <div>{item.name}</div>
+              <div>{item.id}</div>
             </Link>
           );
         })}

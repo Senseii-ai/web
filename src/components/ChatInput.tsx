@@ -16,9 +16,9 @@ const ChatInput = ({ sideBarOpen, threadId }: IChatInputProps) => {
 
   const handleChatSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("thread ID", threadId);
 
     if (threadId === "") {
-      console.log("creating a new thread and run");
       const newThreadId = await startChat(token as string, userMessage);
       if (!newThreadId) {
         console.error("Internal server error");
