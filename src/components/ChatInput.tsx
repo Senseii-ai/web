@@ -16,7 +16,6 @@ const ChatInput = ({ sideBarOpen, threadId }: IChatInputProps) => {
 
   const handleChatSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("thread ID", threadId);
 
     if (threadId === "") {
       const newThreadId = await startChat(token as string, userMessage);
