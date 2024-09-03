@@ -6,6 +6,7 @@ import { Message } from "openai/src/resources/beta/threads/messages.js";
 import { useEffect, useState } from "react";
 import { getThreadMessages } from "@/actions/api/threads";
 import { useAuth } from "@/hooks/auth";
+import Logout from "./Logout";
 
 interface IChatUIProps {
   sideBarOpen: boolean;
@@ -52,6 +53,7 @@ const ChatUI = ({ sideBarOpen, toggleSidebar, threadId }: IChatUIProps) => {
             : ""}
         </div>
       </div>
+      <Logout />
       <div className="flex self-end flex-col items-center w-full pb-5">
         <ChatInput sideBarOpen={sideBarOpen} threadId={threadId} />
       </div>

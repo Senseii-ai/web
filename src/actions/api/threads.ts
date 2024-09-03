@@ -76,7 +76,7 @@ const httpGet = async (url: string, token: string) => {
       },
     });
     if (!response.ok) {
-      console.log("response not good", response.status);
+      console.error(response.status);
     }
     return await response.json();
   } catch (error) {

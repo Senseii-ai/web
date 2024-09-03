@@ -41,9 +41,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!localToken) {
       router.push("/login");
     } else {
-      setToken(localStorage.getItem("site"));
+      router.push("/");
     }
-  }, []);
+  }, [token]);
 
   const login = async ({ email, password }: ILoginData) => {
     try {
@@ -63,9 +63,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const res = await response.json();
-      console.log("res data", res);
       if (res) {
-        setUser(res.user);
+        setUser(res.userId);
         setToken(res.accessToken);
         localStorage.setItem("site", res.accessToken);
       }
@@ -78,7 +77,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signup = async ({ email, password }: ISignupData) => {
     try {
-      console.log("I was here");
       const response = await fetch("http://localhost:9090/api/signup", {
         method: "POST",
         headers: {
