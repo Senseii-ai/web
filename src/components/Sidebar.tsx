@@ -37,19 +37,31 @@ const SideBar: React.FC<ISidebarProps> = ({
       className={`${sideBarOpen ? "w-1/4" : "w-0 hidden"} border-gray-300 border-r`}
     >
       <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
-      <div>
-        <div>
-          <Link href={"/"}>Create new Thread</Link>
+      <div className="px-2 my-5 h-full">
+        <CreateNewThread />
+        <div className="flex flex-col mt-5 h-full">
+          {threadList?.map((item, index) => {
+            return <ThreadListItem key={index} item={item} index={index} />;
+          })}
         </div>
-        {threadList?.map((item, index) => {
-          return (
-            <Link key={index} href={`/${item.id}`}>
-              <div>{item.id}</div>
-            </Link>
-          );
-        })}
       </div>
     </div>
+  );
+};
+
+const CreateNewThread = () => {
+  return (
+    <div className="flex rounded-xl items-center justify-center ring ring-green-600 text-lg font-semibold p-2">
+      <Link href={"/"}>Create new Chat</Link>
+    </div>
+  );
+};
+
+const ThreadListItem = ({ item, index }: { item: string; index: number }) => {
+  return (
+    <Link href={`/${item}`}>
+      <div className="text-black">Thread {index}</div>
+    </Link>
   );
 };
 
