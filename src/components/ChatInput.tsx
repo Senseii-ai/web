@@ -1,15 +1,23 @@
-import { startChat } from "@/actions/api/threads";
+import { continueChat, startChat } from "@/actions/api/threads";
 import { useAuth } from "@/hooks/auth";
 import { usePathname, useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { Message } from "openai/src/resources/beta/threads/messages.js";
+import React, { FormEvent, useState } from "react";
 import { IoMdSend } from "react-icons/io";
 
 interface IChatInputProps {
   sideBarOpen: boolean;
   threadId: string;
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
-const ChatInput = ({ sideBarOpen, threadId }: IChatInputProps) => {
+const ChatInput = ({
+  sideBarOpen,
+  threadId,
+  messages,
+  setMessages,
+}: IChatInputProps) => {
   const [userMessage, setUserMessage] = useState("");
   const { token } = useAuth();
   const router = useRouter();
@@ -23,6 +31,21 @@ const ChatInput = ({ sideBarOpen, threadId }: IChatInputProps) => {
         console.error("Internal server error");
       }
       router.push(`/${newThreadId}`);
+    } else {
+      const response: Message[] | null = await continueChat(
+        token,
+        threadId,
+        userMessage,
+      );
+      if (response === null) {
+        console.error("Error talking to server");
+        return;
+      }
+      if (response[0].content[0].type === "text") {
+        const assistantResponse = response[0];
+        const userMessage = response[1];
+        setMessages([assistantResponse, userMessage, ...messages]);
+      }
     }
   };
 

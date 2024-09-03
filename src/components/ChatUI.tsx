@@ -1,7 +1,6 @@
 import ChatInput from "./ChatInput";
 import ToggleSidebarIcon from "./ToggleSideBar";
 import { FaInstalod } from "react-icons/fa6";
-import { redirect, RedirectType, usePathname } from "next/navigation";
 import { Message } from "openai/src/resources/beta/threads/messages.js";
 import { useEffect, useState } from "react";
 import { getThreadMessages } from "@/actions/api/threads";
@@ -55,7 +54,12 @@ const ChatUI = ({ sideBarOpen, toggleSidebar, threadId }: IChatUIProps) => {
       </div>
       <Logout />
       <div className="flex self-end flex-col items-center w-full pb-5">
-        <ChatInput sideBarOpen={sideBarOpen} threadId={threadId} />
+        <ChatInput
+          sideBarOpen={sideBarOpen}
+          threadId={threadId}
+          messages={messages}
+          setMessages={setMessages}
+        />
       </div>
     </div>
   );
