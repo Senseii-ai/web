@@ -30,7 +30,7 @@ const SideBar: React.FC<ISidebarProps> = ({
     if (token) {
       getThreadList();
     }
-  }, [token]);
+  }, []);
 
   return (
     <div

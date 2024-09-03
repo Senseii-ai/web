@@ -48,6 +48,29 @@ export const getThreadMessages = async (
   }
 };
 
+export const continueChat = async (
+  token: string | null,
+  threadId: string,
+  message: string,
+): Promise<Message[] | null> => {
+  try {
+    const url = `${BaseUrl}chat/continue`;
+    const userMessage = {
+      message: {
+        role: "user",
+        content: message,
+      },
+      threadId: threadId,
+    };
+
+    const data = await httpPost(url, token as string, userMessage);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const getBearerToken = (token: string) => {
   return "Bearer " + token;
 };
