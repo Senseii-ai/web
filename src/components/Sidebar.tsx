@@ -3,6 +3,7 @@ import ToggleSidebarIcon from "./ToggleSideBar";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getThreads } from "@/actions/api/threads";
+import { useRouter } from "next/navigation";
 
 interface ISidebarProps {
   sideBarOpen: boolean;
@@ -39,7 +40,7 @@ const SideBar: React.FC<ISidebarProps> = ({
       <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
       <div className="px-2 my-5">
         <CreateNewThread />
-        <div className="flex flex-col mt-5 h-full overflow-y-scroll">
+        <div className="flex flex-col mt-5 h-full overflow-y-auto">
           {threadList?.map((item, index) => {
             return <ThreadListItem key={index} item={item} index={index} />;
           })}
@@ -58,10 +59,14 @@ const CreateNewThread = () => {
 };
 
 const ThreadListItem = ({ item, index }: { item: string; index: number }) => {
+  const router = useRouter();
+  const onClickHandler = () => {
+    router.push(`/${item}`);
+  };
   return (
-    <Link href={`/${item}`}>
-      <div className="text-black">Thread {index}</div>
-    </Link>
+    <div onClick={onClickHandler} className="text-black">
+      Thread {index}
+    </div>
   );
 };
 
