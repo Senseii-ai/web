@@ -37,9 +37,9 @@ const SideBar: React.FC<ISidebarProps> = ({
       className={`${sideBarOpen ? "w-1/4" : "w-0 hidden"} border-gray-300 border-r`}
     >
       <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
-      <div className="px-2 my-5 h-full">
+      <div className="px-2 my-5">
         <CreateNewThread />
-        <div className="flex flex-col mt-5 h-full">
+        <div className="flex flex-col mt-5 h-full overflow-y-scroll">
           {threadList?.map((item, index) => {
             return <ThreadListItem key={index} item={item} index={index} />;
           })}
