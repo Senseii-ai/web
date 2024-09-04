@@ -45,6 +45,7 @@ const ChatInput = ({
         const assistantResponse = response[0];
         const userMessage = response[1];
         setMessages([assistantResponse, userMessage, ...messages]);
+        setUserMessage("");
       }
     }
   };
@@ -55,14 +56,14 @@ const ChatInput = ({
     >
       <form
         onSubmit={(e) => handleChatSubmit(e)}
-        className="w-full p-3 rounded-xl border-2 outline-[#8b969e] flex justify-center"
+        className="w-full p-3 rounded-xl outline outline-[#8b969e] flex justify-center"
       >
         <input
           value={userMessage}
           type="text"
           name="name"
           placeholder="Message Senseii"
-          className={`w-full`}
+          className={`w-full outline-none`}
           required
           onChange={(e) => setUserMessage(e.target.value)}
         />
