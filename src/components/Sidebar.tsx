@@ -11,7 +11,7 @@ interface ISidebarProps {
 }
 
 export interface IThreadList {
-  name: string;
+  summary: string;
   id: string;
 }
 
@@ -35,7 +35,7 @@ const SideBar: React.FC<ISidebarProps> = ({
 
   return (
     <div
-      className={`${sideBarOpen ? "w-1/4" : "w-0 hidden"} border-gray-300 border-r`}
+      className={`${sideBarOpen ? "w-1/4" : "w-0 hidden"} border-gray-300 border-r-2`}
     >
       <ToggleSidebarIcon handleSidebarToggle={toggleSidebar} />
       <div className="px-2 my-5">
@@ -58,14 +58,14 @@ const CreateNewThread = () => {
   );
 };
 
-const ThreadListItem = ({ item, index }: { item: string; index: number }) => {
+const ThreadListItem = ({ item }: { item: IThreadList; index: number }) => {
   const router = useRouter();
   const onClickHandler = () => {
-    router.push(`/${item}`);
+    router.push(`/${item.id}`);
   };
   return (
     <div onClick={onClickHandler} className="text-black">
-      Thread {index}
+      {item.summary}
     </div>
   );
 };

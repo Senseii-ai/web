@@ -71,9 +71,11 @@ const ChatBlob = ({ content }: { content: Message }) => {
     message = content.content[0].text.value;
   }
   return (
-    <div className={`${content.role === "user" ? "self-end" : "self-start"}`}>
+    <div
+      className={`${content.role === "user" ? "self-end" : "self-start"} max-w-2xl `}
+    >
       <div
-        className={`${content.role === "user" ? "rounded-t-2xl rounded-bl-2xl bg-[#68ac7b] text-white px-3 py-3" : "rounded-2xl ring-1 ring-[#68ac7b] bg-[#e1eee5] px-2 py-2"} drop-shadow-xl  flex gap-x-5 items-center justify-center  `}
+        className={`${content.role === "user" ? "rounded-t-2xl rounded-bl-2xl bg-[#68ac7b] text-white px-3 py-3" : "rounded-2xl ring-1 ring-[#68ac7b] bg-[#e1eee5] px-2 py-2"} drop-shadow-xl  flex gap-x-5 items-center justify-center`}
       >
         {content.role === "assistant" && (
           <div className="ring-1 ring-black rounded-full p-2">
